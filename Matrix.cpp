@@ -1,4 +1,7 @@
-//构建一个matrix模板类，利用行主次序把矩阵映射到一维数组中
+/**
+ * 构建一个matrix模板类，利用行主次序把矩阵映射到一维数组中
+ * gl 2021.6.13
+ */
 #include<iostream>
 
 using namespace std;
