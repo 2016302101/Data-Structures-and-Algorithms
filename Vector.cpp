@@ -1,4 +1,7 @@
-//建立一个简单的vector模板类
+/**
+ * 建立一个简单的vector模板类
+ * gl 2021.6.13
+ */
 #include<iostream>
 #include<vector>
 #include<cstring>
