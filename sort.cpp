@@ -4,14 +4,26 @@
 
 using namespace std;
 
+// 计数排序
 void countSort (vector<int>& nums);
+// 快速排序
 int partition (vector<int>& nums, int start, int end); 
 void quickSort (vector<int>& nums, int start, int end);
+// 归并排序
 void mergeSort (vector<int>& nums);
 void mergehelper (vector<int>& src, vector<int>& dst, int start, int end);
+// 冒泡排序
 void bubbleSort (vector<int>& nums);
+// 选择排序
 void selectionSort (vector<int>& nums);
+// 插入排序
 void insertSort(vector<int>& nums);
+// 桶排序
+void Bucket_sort(vector<int>& nums, int bucketSize);
+// 堆排序
+void Heapsort(vector<int>& nums);
+void buildheap(vector<int>& temp, int cur);
+void deleteheap(vector<int>& temp, int cur);
 
 int main() {
     vector<int> nums = {2, 3, 4, 2, 3, 2, 1};
@@ -21,6 +33,8 @@ int main() {
     // countSort(nums);
     // quickSort(nums, 0, nums.size() - 1);
     // mergeSort(nums);
+    // Bucket_sort(nums, 2);
+    // Heapsort(nums);
     return 0;
 }
 
@@ -128,5 +142,92 @@ void insertSort(vector<int>& nums) {
         }
         if (j != i - 1)
             nums[j + 1] = key;
+    }
+}
+
+void Bucket_sort(vector<int>& nums, int bucketSize) {
+    int n = nums.size();
+    int min_num = nums[0];
+    int max_num = nums[0];
+    // 找出最大值和最小值
+    for (int i = 0; i < n; ++i) {
+        min_num = min(min_num, nums[i]);
+        max_num = max(max_num, nums[i]);
+    }
+    // 根据每个桶的数量计算需要的桶的数量
+    int bucketCount = (max_num - min_num) / bucketSize + 1;
+    vector<vector<int>> buckets(bucketCount);
+    for (int i = 0; i < n; ++i) {
+        int pos = (nums[i] - min_num) / bucketSize;
+        buckets[pos].emplace_back(nums[i]);
+    }
+    // 对每个桶单独进行排序，可以选择其他排序方法，这里直接使用自带的sort 
+    int count = 0;
+    for (int i = 0; i < bucketCount; ++i) {
+        sort(buckets[i].begin(), buckets[i].end());
+        
+        for (int j = 0; j < bucketSize; ++j) 
+            nums[count++] = buckets[i][j];
+    }
+}
+
+void Heapsort(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> temp = nums;
+
+    for (int i = 0; i < n; ++i)
+        buildheap(temp, i);
+    
+    for (int i = 0; i < n; ++i)
+        cout << temp[i] << ' ';
+
+    int count = 0;
+    for (int i = n - 1; i >= 0; --i) {
+        nums[count++] = temp[0];
+        deleteheap(temp, i);
+    }
+}
+
+void buildheap(vector<int>& temp, int cur) {
+    int parent = (cur - 1) / 2;
+    while (temp[parent] > temp[cur]) {
+        swap(temp[parent], temp[cur]);
+        cur = parent;
+        parent = (parent - 1) / 2;
+    }
+}
+
+void deleteheap(vector<int>& temp, int cur) {
+    swap(temp[0], temp[cur]);
+    int k = 0;
+    while (k < cur) {
+        int lhs = k * 2 + 1;
+        int rhs = k * 2 + 2;
+        
+        if (lhs >= cur)
+            break;
+        
+        else if (rhs < cur) {
+            if (temp[k] <= min(temp[lhs], temp[rhs]))
+                break;
+            
+            else if (temp[lhs] < temp[rhs]) {
+                swap(temp[k], temp[lhs]);
+                k = lhs;
+            }
+            else {
+                swap(temp[k], temp[rhs]);
+                k = rhs;                
+            }
+        }
+
+        else if (lhs < cur && rhs >= cur) {
+            if (temp[k] > temp[lhs]) {
+                swap(temp[k], temp[lhs]);
+                k = lhs;                
+            }
+            else
+                break;
+        }
     }
 }
