@@ -1,31 +1,31 @@
-/* ÊµÏÖÒ»¸öµ¥Á´±í
+/* å®ç°ä¸€ä¸ªå•é“¾è¡¨
    gl 2022.3.9
-   ½¨Á¢Ò»¸ö¼òµ¥µÄlistÄ£°åÀà
-   TODO: À©Õ¹¸ü¶à¹¦ÄÜ£¬°üÀ¨ÅÅĞò£¬·´×ªµÈµÈ
+   å»ºç«‹ä¸€ä¸ªç®€å•çš„listæ¨¡æ¿ç±»
+   TODO: æ‰©å±•æ›´å¤šåŠŸèƒ½ï¼ŒåŒ…æ‹¬æ’åºï¼Œåè½¬ç­‰ç­‰
  */
 
 #include<iostream>
 
 using namespace std;
 
-//´øÍ·½áµãµÄµ¥Á´±íÀà£¬Í·½áµã´æ·Åµ¥Á´±í³¤¶È 
+//å¸¦å¤´ç»“ç‚¹çš„å•é“¾è¡¨ç±»ï¼Œå¤´ç»“ç‚¹å­˜æ”¾å•é“¾è¡¨é•¿åº¦ 
 class Single_List{
     private:
-        int data; // ±£´æµ±Ç°ÔªËØ£¬¶ÔÓÚdummy½Úµã£¬´ú±í³¤¶È
-        Single_List* next; // ¼ÇÂ¼ÏÂÒ»¸öÔªËØµØÖ·
+        int data; // ä¿å­˜å½“å‰å…ƒç´ ï¼Œå¯¹äºdummyèŠ‚ç‚¹ï¼Œä»£è¡¨é•¿åº¦
+        Single_List* next; // è®°å½•ä¸‹ä¸€ä¸ªå…ƒç´ åœ°å€
     public: 
         Single_List() : data(0), next(nullptr) {}
         Single_List(int x) : data(x), next(nullptr) {}
         Single_List(int x, Single_List* next) : data(x), next(next) {}
 
-        //µ¥Á´±íµÄ´´½¨º¯Êı£¬Î²²å·¨ 
+        //å•é“¾è¡¨çš„åˆ›å»ºå‡½æ•°ï¼Œå°¾æ’æ³• 
         Single_List* Create(int len) {
             if (len <= 0)
                 return nullptr;
             
             Single_List* head = new Single_List(len);
             Single_List* prev = head;
-            cout << "ÇëÊäÈë¸÷¸ö½áµãµÄÊıÖµ£º" << endl; 
+            cout << "è¯·è¾“å…¥å„ä¸ªç»“ç‚¹çš„æ•°å€¼ï¼š" << endl; 
             while(len--){
                 int data;
                 cin >> data;
@@ -36,7 +36,7 @@ class Single_List{
             return head;
         }
 
-        // ½«prevÖ¸Ïòtail
+        // å°†prevæŒ‡å‘tail
         void attach(Single_List* prev, Single_List* tail, int data){
             tail -> data = data;
             prev -> next = tail;
@@ -46,30 +46,30 @@ class Single_List{
             return list -> data;
         }
 
-        //ÅĞ¶Ïµ¥Á´±íÊÇ·ñÎª¿ÕµÄº¯Êı 
+        //åˆ¤æ–­å•é“¾è¡¨æ˜¯å¦ä¸ºç©ºçš„å‡½æ•° 
         bool Isempty(Single_List* list){
             return list -> data == 0;
         }
 
-        //µ¥Á´±íµÄ´òÓ¡º¯Êı
+        //å•é“¾è¡¨çš„æ‰“å°å‡½æ•°
         void Print(Single_List* list){
             for (Single_List* p = list -> next; p != nullptr; p = p -> next)
                 cout << p -> data << ' ';
         }
 
-        //ÔÚµÚindex¸ö½áµãºóÃæ²åÈëÊıÖµÎªdataµÄ½áµãµÄº¯Êı 
+        //åœ¨ç¬¬indexä¸ªç»“ç‚¹åé¢æ’å…¥æ•°å€¼ä¸ºdataçš„ç»“ç‚¹çš„å‡½æ•° 
         Single_List* Insert(Single_List* list,int index ,int data){
             Single_List* prev = list;
             Single_List* insert;
             insert = new Single_List;
             int len = list->getLength(list);
-            //Á´±íÎª¿ÕÊ±,ÎŞÂÛindexÎª¶àÉÙ£¬Ö»ÄÜ²åÔÚµÚÒ»¸öÎ»ÖÃ 
+            //é“¾è¡¨ä¸ºç©ºæ—¶,æ— è®ºindexä¸ºå¤šå°‘ï¼Œåªèƒ½æ’åœ¨ç¬¬ä¸€ä¸ªä½ç½® 
             if(this->Isempty(list)){
                 this->attach(prev,insert,data);
                 list->data++;
                 return list;
             }
-            //Èç¹û²åÈëµÄÎ»ÖÃ´óÓÚµÈÓÚÁ´±í³¤¶ÈÖ±½Ó²åµ½Ä©Î²£¬ 
+            //å¦‚æœæ’å…¥çš„ä½ç½®å¤§äºç­‰äºé“¾è¡¨é•¿åº¦ç›´æ¥æ’åˆ°æœ«å°¾ï¼Œ 
             index = (list->data <= index)?list->data:index;
             for(int i = 0 ; i < index ; i++){
                 prev = prev->next;
@@ -81,7 +81,7 @@ class Single_List{
             return list;
         }
 
-        //Ñ°ÕÒµÚk¸ö½áµãµÄº¯Êı,Ö»ÊÊÓÃÁ´±í²»Îª¿ÕµÄÇé¿ö 
+        //å¯»æ‰¾ç¬¬kä¸ªç»“ç‚¹çš„å‡½æ•°,åªé€‚ç”¨é“¾è¡¨ä¸ä¸ºç©ºçš„æƒ…å†µ 
         Single_List* Findkth(Single_List* list ,int k){
             Single_List* prev;
             prev = list;
@@ -91,7 +91,7 @@ class Single_List{
             return prev;
         }
 
-        //Ñ°ÕÒÊıÖµÎªNµÄ½áµãµÄº¯Êı
+        //å¯»æ‰¾æ•°å€¼ä¸ºNçš„ç»“ç‚¹çš„å‡½æ•°
         int FindN(Single_List* list,int N){
             int result = -1;
             Single_List* prev;
@@ -107,22 +107,22 @@ class Single_List{
             return result; 
         }
 
-        //É¾³ıÊıÖµÎªNµÄ½áµãµÄº¯Êı 
+        //åˆ é™¤æ•°å€¼ä¸ºNçš„ç»“ç‚¹çš„å‡½æ•° 
         void DeleteN(Single_List* list,int N){
             int index = this->FindN(list,N);
-            //²»´æÔÚÊıÖµÎªNµÄÇé¿ö 
+            //ä¸å­˜åœ¨æ•°å€¼ä¸ºNçš„æƒ…å†µ 
             if(index == -1){
-                cout<<"µ¥Á´±í²»´æÔÚÊıÖµÎª"<<N<<"µÄ½áµã"<<endl;
+                cout<<"å•é“¾è¡¨ä¸å­˜åœ¨æ•°å€¼ä¸º"<<N<<"çš„ç»“ç‚¹"<<endl;
                 return;
             }
             this->Deletekth(list,index+1);
         }
 
-        //É¾³ıµÚk¸ö½áµãµÄº¯Êı
+        //åˆ é™¤ç¬¬kä¸ªç»“ç‚¹çš„å‡½æ•°
         void Deletekth(Single_List* list,int k){
             int len = list->data;
             if(this->Isempty(list)){
-                cout<<"µ¥Á´±íÎª¿ÕÎŞ·¨É¾³ı"<<endl;
+                cout<<"å•é“¾è¡¨ä¸ºç©ºæ— æ³•åˆ é™¤"<<endl;
                 return; 
             }
             Single_List* del_pre;
@@ -131,15 +131,15 @@ class Single_List{
             list->data--;
         }
 
-        //Äæ×ªÁ´±íº¯Êı
+        //é€†è½¬é“¾è¡¨å‡½æ•°
         Single_List* Reverse(Single_List* list){
-            //µ¥Á´±íÎª¿ÕÊ± 
+            //å•é“¾è¡¨ä¸ºç©ºæ—¶ 
             if(this->Isempty(list)){
                 return list;
             }
             Single_List* head,*front,*rear,*tag;
-            head = list;                //±£´æÍ·½áµã 
-            //front£¬rearÓÃÓÚÄæ×ª£¬tagÓÃÓÚ¼ÇÂ¼Î´Äæ×ªµÄÁ´±í 
+            head = list;                //ä¿å­˜å¤´ç»“ç‚¹ 
+            //frontï¼Œrearç”¨äºé€†è½¬ï¼Œtagç”¨äºè®°å½•æœªé€†è½¬çš„é“¾è¡¨ 
             front = list->next;         
             rear = front->next;
             front->next = NULL;
@@ -153,7 +153,7 @@ class Single_List{
             return head;
         }
 
-        //¶ÔÁ½¸öÉıĞòÁ´±í½øĞĞÉıĞòºÏ²¢º¯Êı 
+        //å¯¹ä¸¤ä¸ªå‡åºé“¾è¡¨è¿›è¡Œå‡åºåˆå¹¶å‡½æ•° 
         Single_List* Merge(Single_List* list1,Single_List* list2){
             if(list1 == NULL){
                 return list1;
@@ -161,15 +161,15 @@ class Single_List{
             if(list2 == NULL){
                 return list2;
             }
-            Single_List* list;          //½¨Á¢ºÏ²¢Á´±íµÄÍ·½áµã£¬´æ·ÅÁ½¸öÁ´±í³¤¶ÈÖ®ºÍ 
+            Single_List* list;          //å»ºç«‹åˆå¹¶é“¾è¡¨çš„å¤´ç»“ç‚¹ï¼Œå­˜æ”¾ä¸¤ä¸ªé“¾è¡¨é•¿åº¦ä¹‹å’Œ 
             list = new Single_List;
             list->data = list1->data+list2->data;
             list->next = NULL;
             Single_List* prev1,*prev2,*tail,*head,*tag;
-            prev1 = list1->next;        //Ö¸Ïòlist32µÄµÚÒ»¸ö½áµã£¨²»ÊÇ´æ·Å³¤¶ÈµÄÍ·½áµã£¬¼´Í·½áµãÖ®ºóµÄ½áµã£©
+            prev1 = list1->next;        //æŒ‡å‘list32çš„ç¬¬ä¸€ä¸ªç»“ç‚¹ï¼ˆä¸æ˜¯å­˜æ”¾é•¿åº¦çš„å¤´ç»“ç‚¹ï¼Œå³å¤´ç»“ç‚¹ä¹‹åçš„ç»“ç‚¹ï¼‰
             prev2 = list2->next;
-            head = new Single_List;     //½¨Á¢ĞÂÁ´±íµÄ¿ÕÍ·½áµã 
-            tag = head;                 //±£´æ¿ÕÍ·½áµãµÄµØÖ· 
+            head = new Single_List;     //å»ºç«‹æ–°é“¾è¡¨çš„ç©ºå¤´ç»“ç‚¹ 
+            tag = head;                 //ä¿å­˜ç©ºå¤´ç»“ç‚¹çš„åœ°å€ 
             head->next = NULL;           
             while(prev1 && prev2){
                 tail = new Single_List;
@@ -193,7 +193,7 @@ class Single_List{
             return list;                    
         }
 
-        //Á´±íÅÅĞò£¬Ã°ÅİÅÅĞò
+        //é“¾è¡¨æ’åºï¼Œå†’æ³¡æ’åº
         Single_List* Sort(Single_List* list){
             Single_List* head,*prev1,*prev2;
             head = list;
@@ -216,72 +216,72 @@ class Single_List{
 
 int main() {
 
-    cout <<"ÇëÊäÈë³õÊ¼»¯µ¥Á´±íµÄ³¤¶È:" << endl;
+    cout <<"è¯·è¾“å…¥åˆå§‹åŒ–å•é“¾è¡¨çš„é•¿åº¦:" << endl;
     int len;
     cin >> len;
     Single_List* tmp = new Single_List; 
     Single_List* list = tmp -> Create(len);
 
-    cout<<"µ¥Á´±íÈçÏÂ£º"<<endl; 
+    cout<<"å•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     tmp -> Print(list);
     cout << endl;
-    // cout<<"ÅÅĞòºóÎª:"<<endl;
+    // cout<<"æ’åºåä¸º:"<<endl;
     // list = tmp.Sort(list);
     // tmp.Print(list);
     // cout<<endl;
 
-    // cout<<"ÇëÊäÈë³õÊ¼»¯µ¥Á´±íµÄ³¤¶È:"<<endl;
+    // cout<<"è¯·è¾“å…¥åˆå§‹åŒ–å•é“¾è¡¨çš„é•¿åº¦:"<<endl;
     // Single_List* list1;
     // cin>>len;
     // list1 = tmp.Create(len);
-    // cout<<"µÚ¶ş¸öµ¥Á´±íÈçÏÂ£º"<<endl; 
+    // cout<<"ç¬¬äºŒä¸ªå•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     // tmp.Print(list1);
     // cout<<endl;
-    // cout<<"ÅÅĞòºóÎª:"<<endl;
+    // cout<<"æ’åºåä¸º:"<<endl;
     // list1 = tmp.Sort(list1);
     // tmp.Print(list1);
     // cout<<endl;
 
-    // cout<<"ºÏ²¢ºóÁ´±íÎª:"<<endl;
+    // cout<<"åˆå¹¶åé“¾è¡¨ä¸º:"<<endl;
     // Single_List* merge_list = tmp.Merge(list,list1);
     // tmp.Print(merge_list);
     // cout<<endl;
 
 
-    // cout<<"ÇëÊäÈë²åÈë½áµãµÄÎ»ÖÃ£º"<<endl;
+    // cout<<"è¯·è¾“å…¥æ’å…¥ç»“ç‚¹çš„ä½ç½®ï¼š"<<endl;
     // int index,data;
     // cin>>index;
-    // cout<<"²åÈëÇ°µ¥Á´±íÈçÏÂ£º"<<endl; 
+    // cout<<"æ’å…¥å‰å•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     // tmp.Print(list);
-    // cout<<endl<<"ÇëÊäÈë²åÈë½áµãµÄÊıÖµ£º"<<endl;
+    // cout<<endl<<"è¯·è¾“å…¥æ’å…¥ç»“ç‚¹çš„æ•°å€¼ï¼š"<<endl;
     // cin>>data;
     // list = tmp.Insert(list,index,data);
-    // cout<<"²åÈëºóµ¥Á´±íÈçÏÂ£º"<<endl; 
+    // cout<<"æ’å…¥åå•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     // tmp.Print(list);
     // cout<<endl;
 
 
-    // cout<<"ÇëÊäÈëÉ¾³ı½áµãµÄÎ»ÖÃ£º"<<endl;
+    // cout<<"è¯·è¾“å…¥åˆ é™¤ç»“ç‚¹çš„ä½ç½®ï¼š"<<endl;
     // cin>>index;
-    // cout<<"É¾³ıÇ°µ¥Á´±íÈçÏÂ£º"<<endl; 
+    // cout<<"åˆ é™¤å‰å•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     // tmp.Print(list);
     // tmp.Deletekth(list,index);
-    // cout<<endl<<"É¾³ıºóµ¥Á´±íÈçÏÂ£º"<<endl; 
+    // cout<<endl<<"åˆ é™¤åå•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     // tmp.Print(list);
     // cout<<endl;
 
-    // cout<<"ÇëÊäÈëÉ¾³ı½áµãµÄÊıÖµ£º"<<endl;
+    // cout<<"è¯·è¾“å…¥åˆ é™¤ç»“ç‚¹çš„æ•°å€¼ï¼š"<<endl;
     // cin>>data;
-    // cout<<"É¾³ıÇ°µ¥Á´±íÈçÏÂ£º"<<endl; 
+    // cout<<"åˆ é™¤å‰å•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     // tmp.Print(list);
     // tmp.DeleteN(list,data);
-    // cout<<endl<<"É¾³ıºóµ¥Á´±íÈçÏÂ£º"<<endl; 
+    // cout<<endl<<"åˆ é™¤åå•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl; 
     // tmp.Print(list);
     // cout<<endl;
 
-    // cout<<"Äæ×ªµ¥Á´±íÇ°,µ¥Á´±íÈçÏÂ£º"<<endl;
+    // cout<<"é€†è½¬å•é“¾è¡¨å‰,å•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl;
     // tmp.Print(list);
-    // cout<<endl<<"Äæ×ªµ¥Á´±íºó,µ¥Á´±íÈçÏÂ£º"<<endl;
+    // cout<<endl<<"é€†è½¬å•é“¾è¡¨å,å•é“¾è¡¨å¦‚ä¸‹ï¼š"<<endl;
     // list = tmp.Reverse(list); 
     // tmp.Print(list); 
 
