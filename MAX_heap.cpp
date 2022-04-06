@@ -1,47 +1,84 @@
 // #include <bits/stdc++.h>
 #include <iostream>
-#include <list>
-#include <unordered_map>
+#include <vector>
 using namespace std;
 
-class LRU{
+// template <typename T>
+class MAXPQ{
 private:
-	list<pair<int, int>> ls;
-	unordered_map<int, list<pair<int, int>> :: iterator> mp;
+	vector<int> nums;
 	int capacity;
+	int size;
+
+	void exch(int i, int j) {
+		int temp = nums[i];
+		nums[i] = nums[j];
+		nums[j] = temp;
+	}
+
+	void swim(int k) {
+		while (parent(k) <= 1 && less(parent(k), k)) {
+			exch(parent(k), k);
+			k = parent(k);
+		}
+	}
+
+	void sink(int k) {
+		while (left(k) <= capacity) {
+			int next = left(k);
+			if (right(k) <= capacity && less(left(k), right(k)))
+				next = right(k);
+			if (less(next, k))
+				break;
+			k = next;
+		}
+	}
+
+	bool less(int i, int j) {
+		return nums[i] < nums[j];
+	}
+
+	int left(int k) {
+		return k << 1;
+	}
+
+	int right(int k) {
+		return k << 1 + 1;
+	}
+
+	int parent(int k) {
+		return k >> 1;
+	}
 public:	
-	LRU(int val) {
-		capacity = val;
+	MAXPQ(int cap = 10) {
+		capacity = cap;
+		size = 0;
+		nums = vector<int> (cap + 1);
 	}
 
-	int get(int key) {
-		if (!mp.count(key))
-			return -1;
-		
-		auto it = mp[key];
-		int val = it -> second;
-		ls.erase(it);
-		mp.erase(key);
-		ls.emplace_front(key, val);
-		mp[key] = ls.begin();
-		return val;
+	void push(int num) {
+		++size;
+		nums[size] = num;
+		swim(size);
 	}
 
-	void put(int key, int val) {
-		if (mp.count(key)) {
-			ls.erase(mp[key]);
-			mp.erase(key);
-		}
-		if (capacity == ls.size()) {
-			mp.erase(ls.back().first);
-			ls.pop_back();
-		}
-		ls.emplace_front(key, val);
-		mp[key] = ls.begin();
+	void pop() {
+		exch(1, size);
+		sink(1);
+		nums[size] = 0;
+		--size;
+	}
+
+	int top() {
+		return nums[1];
+	}
+
+	bool empty() {
+		return size == 0;
 	}
 };
 
 int main() {
-	LRU *a = new LRU(5);
+	
 	return 0;
 };
