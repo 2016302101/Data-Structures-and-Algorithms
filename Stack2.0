@@ -1,0 +1,74 @@
+#include <iostream>
+#include<vector>
+
+using namespace std;
+
+struct Node {
+public:
+	int val;
+	Node* next;
+	Node(int val = -1): val(val), next(nullptr){}
+	Node(int val, Node* next): val(val), next(next){}
+};
+
+
+class myStack {
+private:
+	Node* head;
+	int size;
+public:
+	myStack() {
+		head = new Node(-1);
+		size = 0;
+	}
+	~myStack(){
+		Node* p = head;
+		while (head != nullptr) {
+			head = p -> next;
+			delete(p);
+			p = head;
+		}
+		size = 0;
+	}
+	void push(int x) {
+		Node* cur = new Node(x, head -> next);
+		head -> next = cur;
+		size++;
+	}
+
+	int top() {
+		return head -> next -> val;
+	}
+
+	void pop() {
+		Node* p = head -> next;
+		head -> next = head -> next -> next;
+		delete p;
+		p = nullptr;
+		size--;
+	}
+
+	bool empty() {
+		return size == 0;
+	}
+
+	void print() {
+		for (auto p = head -> next; p != nullptr; p = p -> next)
+			cout << p -> val << "->";
+		cout << endl;
+	}
+};
+
+int main() {
+	myStack* stk = new myStack();
+	for (int i = 0; i < 10; ++i)
+		stk -> push(i);
+	cout << stk -> empty() << endl;
+	cout << stk -> top() << endl;
+	stk -> print();
+	stk -> pop();
+	stk -> print();
+	delete stk;
+	return 0;
+};
+
