@@ -1,0 +1,50 @@
+#include <iostream>
+#include<vector>
+
+using namespace std;
+
+template <typename T>
+class myStack {
+private:
+	vector<T> nums;
+	int size;
+public:
+	myStack(int len = 10) {
+		nums = vector<T> (len);
+		size = 0;
+	}
+	void push(int x) {
+		nums[size++] = x;
+	}
+
+	int top() {
+		return nums[size - 1];
+	}
+
+	void pop() {
+		size--;
+	}
+
+	bool empty() {
+		return size == 0;
+	}
+
+	void print() {
+		for (int i = 0; i < size; ++i)
+			cout << nums[i] << "<-";
+		cout << endl;
+	}
+};
+
+int main() {
+	myStack<int> stk;
+	for (int i = 0; i < 10; ++i)
+		stk.push(i);
+	cout << stk.empty() << endl;
+	cout << stk.top() << endl;
+	stk.print();
+	stk.pop();
+	stk.print();
+	return 0;
+};
+
