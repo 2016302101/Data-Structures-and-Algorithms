@@ -1,0 +1,69 @@
+#include<iostream>
+#include<vector>
+#include<algorithm> 
+
+using namespace std;
+
+template <typename T> 
+class myVector{
+public:
+    T* my_array;
+    int size;
+    int capacity;
+
+public:
+    myVector(int len = 10): size(len), capacity(len + 10){
+        my_array = new T[capacity];
+    }
+    
+    myVector(const myVector& rhs): size(rhs.size), capacity(rhs.capacity) {
+        my_array = new T[capacity];
+        // for (int i = 0; i < size; ++i)
+        //     my_array[i] = rhs.my_array[i];
+        memcpy(my_array, rhs.my_array, size * sizeof(T));
+    } // 实现深拷贝，用memcpy函数
+
+    myVector<T>& operator= (const myVector& rhs) {
+        if (this != nullptr) {
+            delete[] this -> my_array;
+            this -> my_array = nullptr;
+            this -> size = 0;
+            this -> capacity = 0;
+        }
+        this -> capacity = rhs.capacity;
+        this -> size = rhs.size;
+        this -> my_array = new T[capacity];
+        memcpy(my_array, rhs.my_array, size * sizeof(T));
+        return *this;
+    } // 拷贝赋值函数，逻辑是先判断当前指针是否为空，如果不为空则清空内存。然后与拷贝构造函数相同
+
+    myVector(vectorList<T>&& obj){
+        size = obj.Size();
+        obj.size = 0;
+        capacity = obj.Capacity();
+        obj.capacity = 0;
+        my_array = obj.my_array;
+        obj.my_array = nullptr;
+    }//移动构造函数，将右值引用赋值给this  
+
+    myVector<T>& operator= (myVector&& rhs) {
+        if (this != nullptr) {
+            delete[] this -> my_array;
+            this -> my_array = nullptr;
+            this -> size = 0;
+            this -> capacity = 0;
+        }
+        this -> capacity = rhs.capacity;
+        rhs.capacity = 0;
+        this -> size = rhs.size;
+        rhs.size = 0;
+        this -> my_array = rhs.my_array;
+        rhs.my_array = nullptr;
+        return *this;        
+    }// 移动赋值函数
+};
+
+int main() {
+
+    return 0;
+};
