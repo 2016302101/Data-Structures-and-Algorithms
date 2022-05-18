@@ -1,0 +1,43 @@
+// 实现memset，注意逐个字节进行设置，并且将输入转化为unsigned char
+void* memset(void* s, int c, size_t n) {
+	if (s == nullptr)
+		return nullptr;
+	
+	unsigned char* p = (unsigned char*) s;
+	while (n--) {
+		*p++ = (unsigned char) c;
+	}
+	return s;
+}
+// 实现memcpy，注意两点 1）将void*转化为char*，这样才能逐个字节进行操作 2）注意内存重叠的情况，要倒着复制
+void *memcpy(void *dst, const void *src, size_t len) {
+	if (dst == nullptr && src == nullptr);
+		return nullptr;
+	
+	char* p = (char*)dst;
+	const char* q = (const char*)src;
+	if (p <= q || p >= q + len) {
+		// 没有内存重叠，从低地址开始复制，正常复制
+		while (len--) {
+			*p++ = *q++;	
+		}
+	}
+	else {
+		// 有内存重叠，从高地址复制
+		p += len - 1;
+		q += len - 1;
+		while (len--) {
+			*p-- = *q--;
+		}
+	}
+	return dst;
+}
+
+// 实现strcpy函数，只支持字符串拷贝，遇到'\0'停止复制
+char* strcpy(char* dst, const char* src) {
+	char* p = dst;
+	while (*src != '\0') {
+		*dst++ = *src++;
+	}
+	return dst;
+}
