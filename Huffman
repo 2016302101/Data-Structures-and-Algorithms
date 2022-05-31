@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+using namespace std;
+
+struct Hnode{
+public:
+	Hnode(int val, char ch = '#'): val(val), ch(ch), left(nullptr), right(nullptr) {}
+	int val; // 权重,出现的频率
+	char ch; // 字符
+	Hnode* left;
+	Hnode* right;
+};
+
+class Huffman{
+public:
+	vector<string> code; 
+
+	Huffman(string str) {
+		code = vector<string> (26);
+		vector<int> vec (26);
+		for (auto& ch : str)
+			vec[ch - 'a']++;
+
+		for (int i = 0; i < 26; ++i) {
+			Hnode* cur = new Hnode(vec[i], 'a' + i);
+			pq.push(cur);
+		}
+
+		while (pq.size() > 1) {
+			auto a = pq.top();
+			pq.pop();
+			auto b = pq.top();
+			pq.pop();
+
+			Hnode* cur = new Hnode(a -> val + b -> val);
+			cur -> left = a;
+			cur -> right = b;
+			pq.push(cur);
+		}
+
+		string path;
+		inorder(pq.top(), path);
+	}
+
+	void inorder(Hnode* root, string& path) {
+		if (root == nullptr)
+			return;
+		
+		if (root -> ch != '#') {
+			code[root -> ch - 'a'] = path;
+		}
+
+		path.push_back('0');
+		inorder(root -> left, path);
+		path.pop_back();
+
+		path.push_back('1');
+		inorder(root -> right, path);
+		path.pop_back();		
+	}
+
+	struct mycmp{
+		bool operator() (Hnode* lhs, Hnode* rhs) {
+			return lhs -> val > rhs -> val;
+		}
+	};
+private:
+	priority_queue<Hnode*, vector<Hnode*>, mycmp> pq;
+};
+
+int main() {
+	string str = "beepboopbeer";
+	Huffman* hf = new Huffman(str);
+	return 0;
+};
+
