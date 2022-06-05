@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <mutex>
+#include <condition_variable>
+using namespace std;
+
+class Semaphore {
+public:
+	Semaphore(int count = 1) : count(count) {}
+	// P操作
+	void wait() {
+		unique_lock<mutex> unique(my_mutex);
+		--count;
+		if (count < 0)
+			my_cv.wait(unique);
+	}
+	
+	// V操作
+	void signal() {
+		unique_lock<mutex> unique(my_mutex);
+		++count;
+		if (count >= 0)
+			my_cv.notify_one();
+	}
+private:
+	mutex my_mutex;
+	condition_variable my_cv;
+	int count;
+};
