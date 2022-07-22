@@ -1,0 +1,50 @@
+#include <iostream>
+#include <mutex>
+using namespace std;
+
+饿汉模式（本身就是线程安全的）
+class Singleton {
+private:
+	Singleton(){}
+public:
+	static Singleton* getInstance() {
+		return p;
+	}
+private:
+	static Singleton* p = new Singleton();
+};
+
+懒汉模式 只有调用该函数时才会创建实例
+class Singleton {
+private:
+	Singleton(){}
+public:
+	static Singleton* getInstace() {
+		if (p == nullptr) {
+			p = new Singleton();
+		}
+		return p;
+	}
+private:
+	static Singleton* p = nullptr;
+};
+
+懒汉模式 DCL双重锁确保线程安全
+class Singleton {
+private:
+	Singleton(){}
+public:
+	static Singleton* getInstace() {
+		if (p == nullptr) {
+			my_mutex.lock();
+			if (p == nullptr) {
+				p = new Singleton();
+			}
+			my_mutex.unlock();
+		}
+		return p;
+	}
+private:
+	static mutex my_mutex;
+	static Singleton* p = nullptr;
+};
