@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <mutex>
+#include <condition_variable>
+#include <thread>
+#include <queue>
+
+using namespace std;
+class Queue
+{
+public:
+    void Put(int val)
+    {
+        std::unique_lock<std::mutex> lck(mtx_);
+        //队列不为空，通知消费者消费，消费完继续生产,生产者进行阻塞
+        while(!queue_.empty())
+        { 
+            cdv_.wait(lck);//主动阻塞，主动等待,cdv_调用lck的lock()和unlock()方法
+        }
+        queue_.push(val);
+        cdv_.notify_one();//通知其他线程，唤醒其他线程，去获取互斥锁
+    }
+    int Take()
+    {
+        std::unique_lock<std::mutex> lck(mtx_);
+        while (queue_.empty())
+        {
+            cdv_.wait(lck);//主动阻塞，主动等待，cdv_调用lck的lock()和unlock()方法
+        }
+        int front = queue_.front();
+        queue_.pop();
+        cdv_.notify_one();
+        return front;
+    }
+private:
+    std::queue<int> queue_;
+    std::mutex mtx_;
+    std::condition_variable cdv_;
+};
+
+//生产者线程
+void producer(Queue *q)
+{
+    for(int i =0 ;i<10;++i)
+    {
+        q->Put(i);
+        std::cout<<"put "<<i<<std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+}
+
+//消费者线程
+void constumer(Queue *q)
+{
+    for(int i =0 ;i<1000;++i)
+    {
+        int v = q->Take();
+        std::cout<<"get "<<v<<std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+}
+
+int main()
+{   
+    Queue q;
+    std::thread t1(producer,&q);
+    std::thread t2(constumer,&q);
+
+    t1.join();
+    t2.join();
+    return 0;
+}
